@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TurismoReal_Departamentos.Core\TurismoReal_Departamentos.Core.csproj" />
+    <ProjectReference Include="..\TurismoReal_Departamentos.Infra\TurismoReal_Departamentos.Infra.csproj" />
+  </ItemGroup>
+
 
 </Project>
