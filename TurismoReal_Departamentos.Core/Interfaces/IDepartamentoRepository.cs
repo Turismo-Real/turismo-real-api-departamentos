@@ -7,7 +7,7 @@ namespace TurismoReal_Departamentos.Core.Interfaces
     public interface IDepartamentoRepository
     {
         // GET ALL
-        Task<List<object>> GetDepartamentos();
+        Task<List<Departamento>> GetDepartamentos();
 
         // GET BY ID
         Task<object> GetDepartamento(int id);

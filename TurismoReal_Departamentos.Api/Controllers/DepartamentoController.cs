@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TurismoReal_Departamentos.Core.DTOs;
 using TurismoReal_Departamentos.Core.Interfaces;
@@ -19,10 +20,10 @@ namespace TurismoReal_Departamentos.Api.Controllers
 
         // GET: /api/v1/departamento
         [HttpGet]
-        public async Task<object> GetDepartamentos()
+        public async Task<List<Departamento>> GetDepartamentos()
         {
-            await Task.Delay(2);
-            return "";
+            List<Departamento> deptos = await _departamentoRepository.GetDepartamentos();
+            return deptos;
         }
 
         // GET: /api/v1/departamento/{id}
@@ -38,7 +39,6 @@ namespace TurismoReal_Departamentos.Api.Controllers
         public async Task<CreateOutput> CreateDepartamento([FromBody] Departamento payload)
         {
             int result = await _departamentoRepository.CreateDepartamento(payload);
-            System.Console.WriteLine(result);
 
             if(result > 0)
             {
