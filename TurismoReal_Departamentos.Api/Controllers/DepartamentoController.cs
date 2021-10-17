@@ -30,8 +30,14 @@ namespace TurismoReal_Departamentos.Api.Controllers
         [HttpGet("{id}")]
         public async Task<object> GetDepartamento(int id)
         {
-            await Task.Delay(2);
-            return "";
+            Departamento depto = await _departamentoRepository.GetDepartamento(id);
+
+            if(depto.id_departamento == 0)
+            {
+                return new NotFoundOutput($"No se encontró departamento con ID {id}");
+            }
+
+            return depto;
         }
 
         // POST: /api/v1/departamento

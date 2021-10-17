@@ -10,7 +10,7 @@ namespace TurismoReal_Departamentos.Core.Interfaces
         Task<List<Departamento>> GetDepartamentos();
 
         // GET BY ID
-        Task<object> GetDepartamento(int id);
+        Task<Departamento> GetDepartamento(int id);
 
         // CREATE
         Task<int> CreateDepartamento(Departamento depto);

@@ -61,9 +61,42 @@ namespace TurismoReal_Departamentos.Infra.Repositories
         }
 
         // GET BY ID
-        public Task<object> GetDepartamento(int id)
+        public async Task<Departamento> GetDepartamento(int id)
         {
-            throw new NotImplementedException();
+            _context.OpenConnection();
+            OracleCommand cmd = new OracleCommand("sp_obten_depto_por_id", _context.GetConnection());
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.BindByName = true;
+            cmd.Parameters.Add("depto_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("depto", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["depto_id"].Value = id;
+            OracleDataReader reader = (OracleDataReader) await cmd.ExecuteReaderAsync();
+
+            Departamento depto = new Departamento();
+            while (reader.Read())
+            {
+                depto.id_departamento = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("id_departamento")).ToString());
+                depto.rol = reader.GetValue(reader.GetOrdinal("rol")).ToString();
+                depto.dormitorios = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("dormitorio")).ToString());
+                depto.banios = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("banios")).ToString());
+                depto.descripcion = reader.GetValue(reader.GetOrdinal("descripcion")).ToString();
+                depto.superficie = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("superficie")).ToString());
+                depto.valorDiario = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("valor_diario")).ToString());
+                depto.tipo = reader.GetValue(reader.GetOrdinal("tipo_departamento")).ToString();
+                depto.estado = reader.GetValue(reader.GetOrdinal("estado")).ToString();
+
+                Direccion direccion = new Direccion();
+                direccion.region = reader.GetValue(reader.GetOrdinal("region")).ToString();
+                direccion.comuna = reader.GetValue(reader.GetOrdinal("comuna")).ToString();
+                direccion.calle = reader.GetValue(reader.GetOrdinal("calle")).ToString();
+                direccion.numero = reader.GetValue(reader.GetOrdinal("numero")).ToString();
+                direccion.depto = reader.GetValue(reader.GetOrdinal("depto")).ToString();
+                depto.instalaciones = ObtenerInstalaciones(depto, _context.GetConnection());
+            }
+            _context.CloseConnection();
+            return depto;
         }
 
         // CREATE
