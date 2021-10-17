@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TurismoReal_Departamentos.Core.DTOs;
+using TurismoReal_Departamentos.Core.Messages.Output;
 
 namespace TurismoReal_Departamentos.Core.Interfaces
 {
@@ -19,6 +20,6 @@ namespace TurismoReal_Departamentos.Core.Interfaces
         Task<object> UpdateDepartamento(int id, object depto);
 
         // DELETE
-        Task<object> DeleteDepartamento(int id);
+        Task<int> DeleteDepartamento(int id);
     }
 }

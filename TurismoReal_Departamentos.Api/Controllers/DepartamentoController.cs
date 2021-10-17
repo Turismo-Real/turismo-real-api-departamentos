@@ -58,7 +58,7 @@ namespace TurismoReal_Departamentos.Api.Controllers
 
         // PUT: /api/v1/departamento/{id}
         [HttpPost("{id}")]
-        public async Task<object> DeleteDepartamento(int id, [FromBody] object payload)
+        public async Task<object> UpdateDepartamento(int id, [FromBody] object payload)
         {
             await Task.Delay(2);
             return "";
@@ -66,10 +66,13 @@ namespace TurismoReal_Departamentos.Api.Controllers
 
         // DELETE: /api/v1/departamento/{id}
         [HttpDelete("{id}")]
-        public async Task<object> DeleteDepartamento(int id)
+        public async Task<DeleteOutput> DeleteDepartamento(int id)
         {
-            await Task.Delay(2);
-            return "";
+            int removed = await _departamentoRepository.DeleteDepartamento(id);
+
+            if(removed == 0) return new DeleteOutput("Error al eliminar departamento.", false);
+            if(removed == -1) return new DeleteOutput($"No existe el departamento con ID {id}", false);
+            return new DeleteOutput("Departamento eliminado.", true);
         }
 
     }

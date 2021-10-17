@@ -162,9 +162,20 @@ namespace TurismoReal_Departamentos.Infra.Repositories
         }
 
         // DELETE
-        public Task<object> DeleteDepartamento(int id)
+        public async Task<int> DeleteDepartamento(int id)
         {
-            throw new NotImplementedException();
+            _context.OpenConnection();
+            OracleCommand cmd = new OracleCommand("sp_eliminar_depto", _context.GetConnection());
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.BindByName = true;
+
+            cmd.Parameters.Add("depto_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("removed", OracleDbType.Int32).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["depto_id"].Value = id;
+            await cmd.ExecuteNonQueryAsync();
+            int removed = Convert.ToInt32(cmd.Parameters["removed"].Value.ToString());
+            return removed;
         }
 
 
