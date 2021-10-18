@@ -17,7 +17,7 @@ namespace TurismoReal_Departamentos.Core.Interfaces
         Task<int> CreateDepartamento(Departamento depto);
 
         // UPDATE
-        Task<object> UpdateDepartamento(int id, object depto);
+        Task<int> UpdateDepartamento(int id, Departamento depto);
 
         // DELETE
         Task<int> DeleteDepartamento(int id);

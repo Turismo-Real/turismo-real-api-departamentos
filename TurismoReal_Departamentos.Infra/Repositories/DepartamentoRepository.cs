@@ -93,6 +93,7 @@ namespace TurismoReal_Departamentos.Infra.Repositories
                 direccion.calle = reader.GetValue(reader.GetOrdinal("calle")).ToString();
                 direccion.numero = reader.GetValue(reader.GetOrdinal("numero")).ToString();
                 direccion.depto = reader.GetValue(reader.GetOrdinal("depto")).ToString();
+                depto.direccion = direccion;
                 depto.instalaciones = ObtenerInstalaciones(depto, _context.GetConnection());
             }
             _context.CloseConnection();
@@ -156,9 +157,46 @@ namespace TurismoReal_Departamentos.Infra.Repositories
         }
 
         // UPDATE
-        public Task<object> UpdateDepartamento(int id, object depto)
+        public async Task<int> UpdateDepartamento(int id, Departamento depto)
         {
-            throw new NotImplementedException();
+            _context.OpenConnection();
+            OracleCommand cmd = new OracleCommand("sp_editar_depto", _context.GetConnection());
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.BindByName = true;
+            cmd.Parameters.Add("depto_id", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("rol_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("dormitorios_d", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("banios_d", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("descripcion_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("superficie_d", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("valor_diario_d", OracleDbType.Double).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("tipo_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("estado_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("comuna_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("calle_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("numero_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("depto_d", OracleDbType.Varchar2).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("updated", OracleDbType.Int32).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["depto_id"].Value = id;
+            cmd.Parameters["rol_d"].Value = depto.rol;
+            cmd.Parameters["dormitorios_d"].Value = depto.dormitorios;
+            cmd.Parameters["banios_d"].Value = depto.banios;
+            cmd.Parameters["descripcion_d"].Value = depto.descripcion;
+            cmd.Parameters["superficie_d"].Value = depto.superficie;
+            cmd.Parameters["valor_diario_d"].Value = depto.valorDiario;
+            cmd.Parameters["tipo_d"].Value = depto.tipo;
+            cmd.Parameters["estado_d"].Value = depto.estado;
+            cmd.Parameters["comuna_d"].Value = depto.direccion.comuna;
+            cmd.Parameters["calle_d"].Value = depto.direccion.calle;
+            cmd.Parameters["numero_d"].Value = depto.direccion.numero;
+            cmd.Parameters["depto_d"].Value = depto.direccion.depto;
+
+            await cmd.ExecuteNonQueryAsync();
+            int updated = int.Parse(cmd.Parameters["updated"].Value.ToString());
+            _context.CloseConnection();
+            return updated;
         }
 
         // DELETE

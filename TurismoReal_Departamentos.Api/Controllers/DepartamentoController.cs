@@ -57,11 +57,14 @@ namespace TurismoReal_Departamentos.Api.Controllers
         }
 
         // PUT: /api/v1/departamento/{id}
-        [HttpPost("{id}")]
-        public async Task<object> UpdateDepartamento(int id, [FromBody] object payload)
+        [HttpPut("{id}")]
+        public async Task<object> UpdateDepartamento(int id, [FromBody] Departamento depto)
         {
-            await Task.Delay(2);
-            return "";
+            int updated = await _departamentoRepository.UpdateDepartamento(id, depto);
+
+            if (updated == 0) return new { message = "Error al actualizar departamento.", updated = false };
+            if (updated == -1) return new { message = $"No existe departamento con ID {id}.", updated = false };
+            return new { message = "Departamento actualizado.", updated = true };
         }
 
         // DELETE: /api/v1/departamento/{id}
