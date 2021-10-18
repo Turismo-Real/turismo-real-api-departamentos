@@ -8,13 +8,13 @@ namespace TurismoReal_Departamentos.Core.Messages.Output
     {
         public CreateOutput() { }
 
-        public CreateOutput(string message, int id_departamento)
+        public CreateOutput(string message, object departamento)
         {
             this.message = message;
-            this.id_departamento = id_departamento;
+            this.departamento = departamento;
         }
 
         public string message { get; set; }
-        public int id_departamento { get; set; }
+        public object departamento { get; set; }
     }
 }

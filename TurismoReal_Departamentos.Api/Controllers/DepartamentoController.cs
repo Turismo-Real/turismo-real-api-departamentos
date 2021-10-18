@@ -48,11 +48,12 @@ namespace TurismoReal_Departamentos.Api.Controllers
 
             if(result > 0)
             {
-                return new CreateOutput("Departamento creado exitosamente.", result);
+                Departamento depto = await _departamentoRepository.GetDepartamento(result);
+                return new CreateOutput("Departamento creado exitosamente.", depto);
             }
             else
             {
-                return new CreateOutput("Error al crear departamento", result);
+                return new CreateOutput("Error al crear departamento", null);
             }
         }
 
@@ -64,7 +65,9 @@ namespace TurismoReal_Departamentos.Api.Controllers
 
             if (updated == 0) return new { message = "Error al actualizar departamento.", updated = false };
             if (updated == -1) return new { message = $"No existe departamento con ID {id}.", updated = false };
-            return new { message = "Departamento actualizado.", updated = true };
+
+            Departamento newDepto = await _departamentoRepository.GetDepartamento(updated);
+            return new { message = "Departamento actualizado.", updated = true, departamento = newDepto };
         }
 
         // DELETE: /api/v1/departamento/{id}
