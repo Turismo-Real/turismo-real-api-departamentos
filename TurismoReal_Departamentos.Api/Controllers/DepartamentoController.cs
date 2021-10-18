@@ -66,7 +66,7 @@ namespace TurismoReal_Departamentos.Api.Controllers
             if (updated == 0) return new { message = "Error al actualizar departamento.", updated = false };
             if (updated == -1) return new { message = $"No existe departamento con ID {id}.", updated = false };
 
-            Departamento newDepto = await _departamentoRepository.GetDepartamento(updated);
+            Departamento newDepto = await _departamentoRepository.GetDepartamento(id);
             return new { message = "Departamento actualizado.", updated = true, departamento = newDepto };
         }
 

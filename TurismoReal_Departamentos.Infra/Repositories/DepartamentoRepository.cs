@@ -195,6 +195,15 @@ namespace TurismoReal_Departamentos.Infra.Repositories
 
             await cmd.ExecuteNonQueryAsync();
             int updated = int.Parse(cmd.Parameters["updated"].Value.ToString());
+
+            if(updated == 1)
+            {
+                depto.id_departamento = id;
+                // eliminar instalaciones actuales
+                EliminarInstalaciones(depto, _context.GetConnection());
+                // editar instalaciones
+                AgregarInstalaciones(depto, _context.GetConnection());
+            }
             _context.CloseConnection();
             return updated;
         }
@@ -257,6 +266,18 @@ namespace TurismoReal_Departamentos.Infra.Repositories
                 instalaciones.Add(instalacion);
             }
             return instalaciones;
+        }
+
+        // ELIMINAR INSTALACIONES ACTUALES
+        public void EliminarInstalaciones(Departamento depto, OracleConnection con)
+        {
+            OracleCommand cmd = new OracleCommand("sp_eliminar_instalaciones", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.BindByName = true;
+
+            cmd.Parameters.Add("depto_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters["depto_id"].Value = depto.id_departamento;
+            cmd.ExecuteNonQuery();
         }
 
     }
