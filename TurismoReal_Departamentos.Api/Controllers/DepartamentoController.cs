@@ -76,7 +76,7 @@ namespace TurismoReal_Departamentos.Api.Controllers
             if(result > 0)
             {
                 Departamento depto = await _departamentoRepository.GetDepartamento(result);
-                CreateOutput response = new CreateOutput("Departamento creado exitosamente.", depto);
+                CreateOutput response = new CreateOutput("Departamento creado exitosamente.", true, depto);
                 // LOG
                 log.EndLog(DateTime.Now, 200, response);
                 Console.WriteLine(log.parseJson());
@@ -85,7 +85,7 @@ namespace TurismoReal_Departamentos.Api.Controllers
             }
             else
             {
-                CreateOutput response = new CreateOutput("Error al crear departamento", null);
+                CreateOutput response = new CreateOutput("Error al crear departamento", false, null);
                 // LOG
                 log.EndLog(DateTime.Now, 200, response);
                 Console.WriteLine(log.parseJson());

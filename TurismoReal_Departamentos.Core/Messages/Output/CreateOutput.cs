@@ -8,13 +8,15 @@ namespace TurismoReal_Departamentos.Core.Messages.Output
     {
         public CreateOutput() { }
 
-        public CreateOutput(string message, object departamento)
+        public CreateOutput(string message, bool saved, object departamento)
         {
             this.message = message;
+            this.saved = saved;
             this.departamento = departamento;
         }
 
         public string message { get; set; }
+        public bool saved { get; set; }
         public object departamento { get; set; }
     }
 }
