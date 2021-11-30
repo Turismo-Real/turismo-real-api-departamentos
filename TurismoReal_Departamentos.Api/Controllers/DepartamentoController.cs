@@ -76,6 +76,7 @@ namespace TurismoReal_Departamentos.Api.Controllers
             if(result > 0)
             {
                 Departamento depto = await _departamentoRepository.GetDepartamento(result);
+                depto.fechasReservadas = new List<FechaReservada>();
                 CreateOutput response = new CreateOutput("Departamento creado exitosamente.", true, depto);
                 // LOG
                 log.EndLog(DateTime.Now, 200, response);

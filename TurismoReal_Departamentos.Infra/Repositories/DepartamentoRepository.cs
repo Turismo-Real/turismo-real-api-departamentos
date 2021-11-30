@@ -54,6 +54,7 @@ namespace TurismoReal_Departamentos.Infra.Repositories
 
                 // obtener instalaciones
                 depto.instalaciones = ObtenerInstalaciones(depto, _context.GetConnection());
+                depto.fechasReservadas = ObtenerFechasReservadas(depto.id_departamento, _context.GetConnection());
                 deptos.Add(depto);
             }
             _context.CloseConnection();
@@ -95,6 +96,7 @@ namespace TurismoReal_Departamentos.Infra.Repositories
                 direccion.depto = reader.GetValue(reader.GetOrdinal("depto")).ToString();
                 depto.direccion = direccion;
                 depto.instalaciones = ObtenerInstalaciones(depto, _context.GetConnection());
+                depto.fechasReservadas = ObtenerFechasReservadas(depto.id_departamento, _context.GetConnection());
             }
             _context.CloseConnection();
             return depto;
@@ -278,6 +280,30 @@ namespace TurismoReal_Departamentos.Infra.Repositories
             cmd.Parameters.Add("depto_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
             cmd.Parameters["depto_id"].Value = depto.id_departamento;
             cmd.ExecuteNonQuery();
+        }
+
+        // OBTENER FECHAS RESERVADAS POR DEPTO
+        public List<FechaReservada> ObtenerFechasReservadas(int id, OracleConnection con)
+        {
+            OracleCommand cmd = new OracleCommand("sp_obten_fechas_reservadas", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.BindByName = true;
+
+            cmd.Parameters.Add("depto_id", OracleDbType.Int32).Direction = ParameterDirection.Input;
+            cmd.Parameters.Add("fechas_reservadas", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+            cmd.Parameters["depto_id"].Value = id;
+            OracleDataReader reader = cmd.ExecuteReader();
+
+            List<FechaReservada> fechasReservadas = new List<FechaReservada>();
+            while (reader.Read())
+            {
+                FechaReservada fechaReservada = new FechaReservada();
+                fechaReservada.desde = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("fec_desde")).ToString());
+                fechaReservada.hasta = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("fec_hasta")).ToString());
+                fechasReservadas.Add(fechaReservada);
+            }
+            return fechasReservadas;
         }
 
     }

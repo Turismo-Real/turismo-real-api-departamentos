@@ -15,5 +15,6 @@ namespace TurismoReal_Departamentos.Core.DTOs
         public string estado { get; set; }
         public Direccion direccion { get; set; }
         public List<string> instalaciones { get; set; }
+        public List<FechaReservada> fechasReservadas { get; set; }
     }
 }
